@@ -1,0 +1,31 @@
+<mat-card *ngIf="hideEditForm">
+  <mat-card-content *ngIf="vendors.length > 0; else loading">
+      <mat-card-header class="app-accent" layout="row">
+          <mat-card-title>
+              <div>
+                <img src="assets/images/TeamRocketLogo.png" height="50" width="50" class="center"/>
+              </div>
+          </mat-card-title>
+      </mat-card-header>
+      <mat-list flex>
+          <app-vendor-list [vendors]="vendors" (selected)="select($event)">
+          </app-vendor-list>
+      </mat-list>
+  </mat-card-content>
+  <mat-card-footer>
+    <span class="my-primary-text" style="float: right;">{{ msg }}</span>
+  </mat-card-footer>
+  <ng-template #loading>Loading Vendors from server...</ng-template>
+</mat-card>
+<div class="pad5" *ngIf="hideEditForm">
+  <mat-icon (click)="newVendor()" matTooltip="Add New Vendor" class="addicon" color="primary">
+    control_point
+  </mat-icon>
+</div>
+<mat-card *ngIf="!hideEditForm">
+  <mat-card-content>
+    <app-vendor-detail [selectedVendor]="vendor" (cancelled)="cancel('cancelled')" (saved)="save($event)" (deleted)="delete($event)">
+    </app-vendor-detail>
+    <span class="my-primary-text" style="float: right;">{{ msg }}</span>
+  </mat-card-content>
+</mat-card>

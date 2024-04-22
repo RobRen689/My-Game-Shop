@@ -1,0 +1,137 @@
+<mat-card>
+  <mat-card-header layout="row">
+    <div style="margin-top: 5vw; margin-left: 5vw;">
+      <img src="assets/images/TeamRocketLogo.png" height="50" width="50" class="center"/>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="generatorForm" novalidate>
+      <div layout="row" style="margin-top: 3vh">
+        <mat-form-field flex>
+          <mat-label>Vendor</mat-label>
+          <mat-select placeholder="Choose Vendor" formControlName="vendorid">
+            <mat-option *ngFor="let vendor of allVendors" [value]="vendor">{{ vendor.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div *ngIf="hasPurchaseOrders" layout="row">
+        <mat-form-field flex>
+          <mat-label>Purchase Order</mat-label>
+          <mat-select placeholder="Choose a PO" formControlName="purchaseorderid">
+            <mat-option *ngFor="let poItem of vendorPOs" [value]="poItem">{{ poItem.id }} - {{ poItem.podate | date: 'short' : 'GMT-5' }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div *ngIf="hasPurchaseOrders && selectedPO" class="row">
+        <table>
+          <tr>
+            <th
+              colspan="4"
+              class="pad-xs text-center md-subhead my-primary-text"
+              style="font-weight: bold; padding: 2vh; font-size: 30px;"
+            >
+              <div>
+                Purchase Order: {{ selectedPO.id }}
+              </div>
+            </th>
+          </tr>
+          <tr>
+            <th
+              colspan="4"
+              class="pad-xs text-center md-subhead my-primary-text"
+              style="font-weight: bold; font-size: small;"
+            >
+              <div>
+                created on: {{ selectedPO.podate | date: 'short' : 'GMT-5' }}
+              </div>
+            </th>
+          </tr>
+          <br />
+          <tr style="font-weight: bold; background-color: #eeeeee">
+            <td
+              class="my-primary-text"
+              style="
+              text-align: center;
+              width: 25vw;
+              padding-top: 1vh;
+              padding-bottom: 1vh;
+              "
+            >
+              Name
+            </td>
+            <td
+              class="my-primary-text"
+              style="
+              text-align: center;
+              width: 12vw;
+              padding-top: 1vh;
+              padding-bottom: 1vh;
+              "
+            >
+              Qty
+            </td>
+            <td
+              class="my-primary-text"
+              style="
+              text-align: center;
+              width: 20vw;
+              padding-top: 1vh;
+              padding-bottom: 1vh;
+              "
+            >
+              Cost
+            </td>
+            <td
+              class="my-primary-text"
+              style="
+              text-align: center;
+              width: 25vw;
+              padding-top: 1vh;
+              padding-bottom: 1vh;
+              "
+            >
+              Extended
+            </td>
+          </tr>
+          <tr *ngFor="let item of selectedPO?.items">
+            <td class="my-primary-text" style="padding-top: 1vh; padding-bottom: 1vh; text-align: center">
+              {{ item.productname }}
+            </td>
+            <td class="my-primary-text" style="padding-top: 1vh; padding-bottom: 1vh; text-align: center">
+              {{ item.qty }}
+            </td>
+            <td class="my-primary-text" style="padding-top: 1vh; padding-bottom: 1vh; text-align: right">
+              {{ item.id | currency : "USD" : "symbol" : "1.2-2" }}
+            </td>
+            <td class="my-primary-text" style="padding-top: 1vh; padding-bottom: 1vh; text-align: right">
+              {{ item.price * item.qty| currency : "USD" : "symbol" : "1.2-2" }}
+            </td>
+          </tr>
+          <tr>
+            <td class="my-primary-text" colspan="3" style="text-align: right">Sub:</td>
+            <td class="my-primary-text" style="text-align: right">
+              {{ po_subtotal | currency : "USD" : "symbol" : "1.2-2" }}
+            </td>
+          </tr>
+          <tr>
+            <td class="my-primary-text" colspan="3" style="text-align: right">Tax:</td>
+            <td class="my-primary-text" style="text-align: right">
+              {{ po_tax | currency : "USD" : "symbol" : "1.2-2" }}
+            </td>
+          </tr>
+          <tr>
+            <td class="my-primary-text" colspan="3" style="text-align: right">Total:</td>
+            <td style="font-weight: 600; text-align: right; background-color: yellow;">
+              {{ po_total | currency : "USD" : "symbol" : "1.2-2" }}
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div style="text-align:center; margin-top: 1vh;" *ngIf="hasPurchaseOrders && selectedPO">
+        <button mat-raised-button type="submit" (click)="viewPdf()">View PDF</button>
+      </div>
+    </form>
+    <br />
+    <span class="my-primary-text" style="float: right;">{{ message }}</span>
+  </mat-card-content>
+</mat-card>

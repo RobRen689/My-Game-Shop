@@ -1,0 +1,145 @@
+<mat-card>
+  <div style="margin-top: 5vw; margin-left: 5vw;">
+    <img src="assets/images/TeamRocketLogo.png" height="50" width="50" class="center"/>
+  </div>
+  <mat-card-content>
+    <form [formGroup]="generatorForm" novalidate>
+      <div layout="row" style="margin-top: 3vh">
+        <mat-form-field flex>
+          <mat-label>Vendor</mat-label>
+          <mat-select
+            placeholder="Choose Vendor"
+            formControlName="vendorid"
+          >
+            <mat-option *ngFor="let vendor of vendors" [value]="vendor">
+              {{ vendor.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div *ngIf="pickedVendor" layout="row">
+        <mat-form-field flex>
+          <mat-label>Product</mat-label>
+          <mat-select
+            placeholder="Choose Product"
+            formControlName="productid"
+            (change)="onPickProduct()"
+          >
+            <mat-option *ngFor="let product of vendorproducts" [value]="product">
+              {{ product.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div *ngIf="pickedProduct" layout="row">
+        <mat-form-field flex>
+          <mat-label>Select a Qty</mat-label>
+          <mat-select
+            placeholder="Choose Qty"
+            formControlName="productqty"
+            (change)="onPickQty()"
+          >
+            <mat-option *ngFor="let qty of orderqtys" [value]="qty">
+              {{ qty }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <br />
+      <div *ngIf="hasProducts" class="row">
+        <table>
+          <tr>
+            <th
+              colspan="3"
+              class="pad-xs text-center md-subhead my-primary-text"
+              style="font-weight: bold; padding: 2vh"
+            >
+              Selected Products from {{ selectedVendor.name }}
+            </th>
+          </tr>
+          <tr style="font-weight: bold; background-color: #eeeeee">
+            <td
+              class="my-accent-text"
+              style="
+              text-align: center;
+              width: 80vw;
+              padding-top: 2vh;
+              padding-bottom: 2vh;
+              "
+            >
+              Product
+            </td>
+            <td
+              class="my-accent-text"
+              style="
+              text-align: center;
+              width: 3vw;
+              padding-top: 2vh;
+              padding-bottom: 2vh;
+              "
+            >
+              Qty
+            </td>
+            <td
+              class="my-accent-text"
+              style="
+              text-align: center;
+              width: 80vw;
+              padding-top: 2vh;
+              padding-bottom: 2vh;
+              "
+            >
+              Extended
+            </td>
+          </tr>
+          <tr *ngFor="let item of items">
+            <td class="my-accent-text" style="padding-top: 1vh; padding-bottom: 1vh; text-align: center;">
+              {{ item.productid }}
+            </td>
+            <td width="700" class="my-accent-text" style="padding-top: 1vh; padding-bottom: 1vh; text-align: center">
+              {{ item.qty }}
+            </td>
+            <td class="my-accent-text" style="padding-top: 1vh; padding-bottom: 1vh; text-align: right;">
+              {{ item.price * item.qty | currency : "USD" : "symbol" : "1.2-2" }}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" class="my-accent-text" style="text-align: right">Sub:</td>
+            <td class="my-accent-text" style="text-align: right">
+              {{ total | currency : "USD" : "symbol" : "1.2-2" }}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" class="my-accent-text" style="text-align: right">Tax:</td>
+            <td class="my-accent-text" style="text-align: right">
+              {{ tax | currency : "USD" : "symbol" : "1.2-2" }}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" class="my-accent-text" style="text-align: right">Total:</td>
+            <td class="my-accent-text" style="font-weight: 900; text-align: right">
+              {{ total + tax | currency : "USD" : "symbol" : "1.2-2" }}
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div style="text-align: left" *ngIf="hasProducts">
+        <button
+          mat-raised-button color="primary"
+          (click)="createPO()"
+          style="margin-top: 3vh"
+        >
+          Add PO
+        </button>
+      </div>
+      <div style="text-align:left;" *ngIf="generated">
+        <button mat-raised-button type="submit" (click)="viewPdf()">View PDF</button>
+      </div>
+    </form>
+    <br />
+    <!-- <div style="text-align: right">
+    <span class="my-primary-text">{{ msg }}</span>
+    </div> -->
+    <span class="my-primary-text" style="float: right;">{{ msg }}</span>
+  </mat-card-content>
+</mat-card>
