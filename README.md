@@ -1,4 +1,6 @@
-# Casestudyclient
+# My Game Shop App
+
+This is a simple e-commerce app utilizing Java Spring Boot and Angular.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.1.
 
